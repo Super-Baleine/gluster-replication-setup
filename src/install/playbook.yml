@@ -28,9 +28,10 @@
           with_items:
             - openssl
             - glusterfs-server
+            - xfsprogs
 
       - name: storage setup
-        #blah
+        command: mkfs.xfs /dev/sdb1 -f && mount /dev/sdb1 /data
 
   - hosts: node0
     remote_user: root
