@@ -1,0 +1,46 @@
+---
+  - hosts: gluster_nodes
+    remote_user: root
+    tasks:
+
+      - name: copy the apt script file to the nodes
+        copy:
+          src: apt.conf.sh
+          dest: /root/apt.conf.sh
+          owner: root
+          group: root
+          mode: 0775
+      - name: exec the apt conf script file
+        command: sh /root/apt.conf.sh
+
+      - name: get it up-to-date
+        apt:
+          update_cache: yes
+
+      - name: upgrade every package
+        apt:
+        upgrade: yes
+
+      - name: install requirements
+        apt:
+          name: {{ item }}
+          state: present
+          with_items:
+            - openssl
+            - glusterfs-server
+
+      - name: storage setup
+        #blah
+
+  - hosts: node0
+    remote_user: root
+    tasks:
+      - name: copy the setup script to node1
+        copy:
+          src: cluster_setup.sh
+          dest: /root/cluster_setup.sh
+          owner: root
+          group: root
+          mode: 0775
+      - name: execute the cluster setup script
+        command: sh /root/cluster_setup.sh
